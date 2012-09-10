@@ -1,0 +1,7 @@
+*.dll
+*.tlog
+*.obj
+Debug/*
+*.vcxproj.*
+*.vcxproj
+Log.txt
