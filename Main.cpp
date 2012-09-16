@@ -35,6 +35,8 @@ int main(int argc, char* args[])
 
 	while (play)
 	{
+		RF_BeginLoop();
+
 		//Events
 		if(RF_CheckEvent())
 		{
@@ -50,6 +52,8 @@ int main(int argc, char* args[])
 		RF_ClearWindow();
 
 		RF_SwapBuffer();
+
+		RF_HandleFps();
 	}
 
 	return 0;

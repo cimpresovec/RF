@@ -55,12 +55,21 @@
 #endif
 
 //Definitions, etc.
-#define RF_ClearWindow() glClear(GL_COLOR_BUFFER_BIT)
-#define RF_SwapBuffer() SDL_GL_SwapBuffers()
 
 //Render function declarations
 //Create a window
 bool RF_CreateWindow(const std::string caption = "RF", int width = 800, int height = 600, bool fullscreen = false);
+
+//Inline functions for clear and swap
+inline void RF_ClearWindow()
+{
+	return glClear(GL_COLOR_BUFFER_BIT);
+}
+
+inline void RF_SwapBuffer()
+{
+	return SDL_GL_SwapBuffers();
+}
 
 #endif //RF_RENDER_H
 #endif //RF_RENDER

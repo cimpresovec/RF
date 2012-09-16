@@ -66,7 +66,13 @@ bool RF_Log(const std::string text, const std::string file = "Log.txt");
 //Clear log
 bool RF_ClearLog(const std::string file = "Log.txt");
 
-//Check event
+//Begin loop functions for timer
+void RF_BeginLoop();
+
+//Framerate cap/delay
+void RF_HandleFps();
+
+//Inline functions for event check
 inline int RF_CheckEvent()
 {
 	return SDL_PollEvent(&event);

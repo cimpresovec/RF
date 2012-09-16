@@ -81,4 +81,17 @@ bool RF_ClearLog(const std::string file /* = "Log.txt" */)
 	return true;
 }
 
+void RF_BeginLoop()
+{
+	fpsTimer = (float)SDL_GetTicks();
+}
+
+void RF_HandleFps()
+{
+	if (((float)SDL_GetTicks() - fpsTimer) < 1000.f/60.f)
+	{
+		SDL_Delay((int)((1000.f/60.f) - ((float)SDL_GetTicks() - fpsTimer)));
+	}
+}
+
 #endif //RF_MAIN
