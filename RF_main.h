@@ -50,7 +50,8 @@
 #endif
 
 //Objects, definitions, etc.
-extern SDL_Event event;
+extern SDL_Event event; //Event handler
+extern float fpsTimer; //For framerate cap
 #define RF_EventType event.type
 #define RF_EventKey event.key.keysym.sym
 
@@ -60,7 +61,7 @@ extern SDL_Event event;
 bool RF_Initialize();
 
 //Log string, text is appended
-bool RF_Log(std::string text, const std::string file = "Log.txt");
+bool RF_Log(const std::string text, const std::string file = "Log.txt");
 
 //Clear log
 bool RF_ClearLog(const std::string file = "Log.txt");

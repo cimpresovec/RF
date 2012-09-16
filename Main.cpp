@@ -24,7 +24,12 @@
 
 int main(int argc, char* args[])
 {
-	RF_Initialize();
+	if (!RF_Initialize())
+	{
+		return 1;
+	}
+
+	if (!RF_CreateWindow()) return false;
 
 	bool play = true;
 
@@ -38,6 +43,13 @@ int main(int argc, char* args[])
 				play = false;
 			}
 		}
+
+		//Logic
+
+		//Render
+		RF_ClearWindow();
+
+		RF_SwapBuffer();
 	}
 
 	return 0;

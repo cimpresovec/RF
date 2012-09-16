@@ -20,7 +20,7 @@
 #include "RF_config.h"
 #ifdef RF_RENDER
 
-//This file is the rednering part of the framework
+//This file is the rendering part of the framework
 #ifndef RF_RENDER_H
 #define RF_RENDER_H
 
@@ -54,7 +54,13 @@
 //TODO 
 #endif
 
+//Definitions, etc.
+#define RF_ClearWindow() glClear(GL_COLOR_BUFFER_BIT)
+#define RF_SwapBuffer() SDL_GL_SwapBuffers()
+
 //Render function declarations
+//Create a window
+bool RF_CreateWindow(const std::string caption = "RF", int width = 800, int height = 600, bool fullscreen = false);
 
 #endif //RF_RENDER_H
 #endif //RF_RENDER

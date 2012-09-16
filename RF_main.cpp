@@ -20,16 +20,17 @@
 #include "RF_config.h"
 #ifdef RF_MAIN
 
-//Header for main
+//Includes for main
 #include "RF_main.h"
 
 //Objects, definitions, etc.
 SDL_Event event;
+float fpsTimer = 0;
 
 //Main function definitions
 bool RF_Initialize()
 {
-	if (!SDL_Init(SDL_INIT_EVERYTHING))
+	if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
 		RF_Log(SDL_GetError());
 		return false;
@@ -37,7 +38,7 @@ bool RF_Initialize()
 	return true;
 }
 
-bool RF_Log(std::string text, const std::string file /* = "Log.txt" */)
+bool RF_Log(const std::string text, const std::string file /* = "Log.txt" */)
 {
 	std::ofstream logFile;
 
