@@ -24,6 +24,16 @@
 #include "RF_main.h"
 #include "RF_render.h"
 
+//Structures/classes
+//Color structure
+RF_Color::RF_Color(float r /* = 1.f */, float g /* = 1.f */, float b /* = 1.f */, float a /* = 1.f */)
+{
+	this->r = r;
+	this->g = g;
+	this->b = b;
+	this->a = a;
+}
+
 //Render function definitions
 bool RF_CreateWindow(const std::string caption /* = "RF" */, int width /* = 800 */, int height /* = 600 */, bool fullscreen /* = false */)
 {
@@ -58,7 +68,7 @@ bool RF_CreateWindow(const std::string caption /* = "RF" */, int width /* = 800 
 	}
 
 	//OpenGL specific functions
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0, 0, 0, 1);
 	glShadeModel(GL_SMOOTH);
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
@@ -83,6 +93,31 @@ bool RF_CreateWindow(const std::string caption /* = "RF" */, int width /* = 800 
 #endif //RF_GLEW
 
 	return true;
+}
+
+//Shape rendering functions
+void RF_DrawRectangle(float x, float y, float w, float h, float r /* = 0 */, RF_Color col/* = RF_Color */)
+{
+	if (r != 0)
+	{
+		glPushMatrix();
+		glTranslatef(x, y, 0.f);
+		glRotatef(r, 0.f, 0.f, 1.f);
+		glTranslatef(-x, -y, 0.f);
+	}
+
+	glColor4f(col.r, col.g, col.b, col.a);
+	glBegin(GL_TRIANGLE_STRIP);
+		glVertex2f(x+w/2, y-h/2);
+		glVertex2f(x+w/2, y+h/2);
+		glVertex2f(x-w/2, y-h/2);
+		glVertex2f(x-w/2, y+h/2);
+	glEnd();
+
+	if (r != 0)
+	{
+		glPopMatrix();
+	}
 }
 
 #endif //RF_RENDER

@@ -51,6 +51,9 @@ int main(int argc, char* args[])
 		//Render
 		RF_ClearWindow();
 
+		RF_DrawRectangle(0.5,.5,.5,.5, 30.f, RF_Color(0.f));
+		RF_DrawRectangle(-0.5,-.5,.5,.5, 70.f, RF_Color(0.f));
+
 		RF_SwapBuffer();
 
 		RF_HandleFps();

@@ -56,14 +56,26 @@
 
 //Definitions, etc.
 
+//Structures/classes
+//Simple color structure
+struct RF_Color
+{
+	float r, g, b, a;
+	RF_Color(float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f);
+};
+
 //Render function declarations
 //Create a window
 bool RF_CreateWindow(const std::string caption = "RF", int width = 800, int height = 600, bool fullscreen = false);
 
+//Shape rendering functions
+//Rectangle drawing function
+void RF_DrawRectangle(float x, float y, float w, float h, float r = 0, RF_Color col = RF_Color());
+
 //Inline functions for clear and swap
 inline void RF_ClearWindow()
 {
-	return glClear(GL_COLOR_BUFFER_BIT);
+	return glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 inline void RF_SwapBuffer()
