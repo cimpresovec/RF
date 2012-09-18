@@ -71,9 +71,18 @@ bool RF_CreateWindow(const std::string caption = "RF", int width = 800, int heig
 //Load image/texture
 unsigned int RF_LoadTexture(const std::string);
 
+//Destroy texture
+void RF_DeleteTexture(unsigned int texture);
+
 //Shape rendering functions
 //Rectangle drawing function; r = rotation in degrees, col is color, x/yScale is for scaling the render, x/yRotOffset is for changing the pivot/origin for rotation
 void RF_DrawRectangle(float x, float y, float w, float h, float r = 0, RF_Color col = RF_Color(), UINT texture = 0, float xScale = 1.f, float yScale = 1.f);
+
+//Draw a circle; r = radius
+void RF_DrawCircle(float x, float y, float r, RF_Color col = RF_Color());
+
+//Draw a line; w = line width
+void RF_DrawLine(float x1, float y1, float x2, float y2, float w = 1.f, RF_Color col = RF_Color());
 
 //Inline functions for clear and swap
 inline void RF_ClearWindow()

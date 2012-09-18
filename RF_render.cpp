@@ -133,6 +133,12 @@ unsigned int RF_LoadTexture(const std::string fileName)
 	return texture;
 }
 
+void RF_DeleteTexture(unsigned int texture)
+{
+	glDeleteTextures(1, &texture);
+	texture = 0;
+}
+
 //Shape rendering functions
 void RF_DrawRectangle(float x, float y, float w, float h, float r /* = 0 */, RF_Color col /* = RF_Color */, UINT texture /* = 0 */, float xScale /* = 1.f */, float yScale /* = 1.f */)
 {
@@ -175,6 +181,30 @@ void RF_DrawRectangle(float x, float y, float w, float h, float r /* = 0 */, RF_
 	{
 		glPopMatrix();
 	}
+}
+
+void RF_DrawCircle(float x, float y, float r, RF_Color col /* = RF_Color */)
+{
+	glColor4f(col.r, col.g, col.b, col.a);
+
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex2f(x, y);
+	for (float angle = 0; angle <= 2*PI+.2f; angle += .2f)
+	{
+		glVertex2f(x + sin(angle) * r, y + cos(angle) * r);
+	}
+	glEnd();
+}
+
+void RF_DrawLine(float x1, float y1, float x2, float y2, float w /* = 1 */, RF_Color col /* = RF_Color */)
+{
+	glColor4f(col.r, col.g, col.b, col.a);
+
+	glLineWidth(w);
+	glBegin(GL_LINES);
+	glVertex2f(x1, y1);
+	glVertex2f(x2, y2);
+	glEnd();
 }
 
 #endif //RF_RENDER

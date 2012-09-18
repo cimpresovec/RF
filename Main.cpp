@@ -57,7 +57,9 @@ int main(int argc, char* args[])
 		RF_ClearWindow();
 
 		RF_DrawRectangle(0.5,0.5,.5,.5, angle, RF_Color(), 1, 2.f);
-		RF_DrawRectangle(-0.5,-.5,.5,.5, 0, RF_Color(0.f,0.f));
+		RF_DrawCircle(-0.5, -0.5, .2f, RF_Color(1.f, 0.f, 0.f));
+		//RF_DrawRectangle(-0.5,-.5,.5,.5, 0, RF_Color(0.f,0.f));
+		RF_DrawLine(0,0,1,1);
 		
 		RF_SwapBuffer();
 
