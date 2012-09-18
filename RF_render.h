@@ -76,7 +76,10 @@ void RF_DeleteTexture(unsigned int texture);
 
 //Shape rendering functions
 //Rectangle drawing function; r = rotation in degrees, col is color, x/yScale is for scaling the render, x/yRotOffset is for changing the pivot/origin for rotation
-void RF_DrawRectangle(float x, float y, float w, float h, float r = 0, RF_Color col = RF_Color(), UINT texture = 0, float xScale = 1.f, float yScale = 1.f);
+void RF_DrawRectangle(float x, float y, float w, float h, float r = 0.f, RF_Color col = RF_Color(), UINT texture = 0, float xScale = 1.f, float yScale = 1.f);
+
+//Draw a triangle, works line a triangle in a rectangle
+void RF_DrawTriangle(float x, float y, float w, float h, float r = 0.f, RF_Color col = RF_Color(), float xScale = 1.f, float yScale = 1.f);
 
 //Draw a circle; r = radius
 void RF_DrawCircle(float x, float y, float r, RF_Color col = RF_Color());

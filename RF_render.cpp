@@ -183,6 +183,30 @@ void RF_DrawRectangle(float x, float y, float w, float h, float r /* = 0 */, RF_
 	}
 }
 
+void RF_DrawTriangle(float x, float y, float w, float h, float r /* = 0 */, RF_Color col /* = RF_Color */, float xScale /* = 1.f */, float yScale /* = 1.f */)
+{
+	if (r != 0.f || xScale != 1.f || yScale != 1.f)
+	{
+		glPushMatrix();
+		glTranslatef(x, y, 0.f);
+		glRotatef(r, 0.f, 0.f, 1.f);
+		glScalef(xScale, yScale, 1.f);
+		glTranslatef(-x, -y, 0.f);
+	}
+
+	glColor4f(col.r, col.g, col.b, col.a);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(x+w/2, y-h/2);
+	glVertex2f(x, y+h/2);
+	glVertex2f(x-w/2, y-h/2);
+	glEnd();
+
+	if (r != 0.f || xScale != 1.f || yScale != 1.f)
+	{
+		glPopMatrix();
+	}
+}
+
 void RF_DrawCircle(float x, float y, float r, RF_Color col /* = RF_Color */)
 {
 	glColor4f(col.r, col.g, col.b, col.a);
