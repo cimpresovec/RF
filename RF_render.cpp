@@ -95,26 +95,83 @@ bool RF_CreateWindow(const std::string caption /* = "RF" */, int width /* = 800 
 	return true;
 }
 
-//Shape rendering functions
-void RF_DrawRectangle(float x, float y, float w, float h, float r /* = 0 */, RF_Color col/* = RF_Color */)
+unsigned int RF_LoadTexture(const std::string fileName)
 {
-	if (r != 0)
+	SDL_Surface* image = IMG_Load(fileName.c_str());
+
+	if (!image)
+	{
+		std::string errMsg = "Problem loading image " + fileName;
+		std::cout << errMsg << "\n";
+		RF_Log(errMsg);
+		return 0;
+	}
+
+	//Display format
+	SDL_DisplayFormatAlpha(image);
+
+	//Generating the texture
+	unsigned int texture = 0;
+
+	glGenTextures(1, &texture);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
+	SDL_FreeSurface(image);
+
+	glDisable(GL_TEXTURE_2D);
+
+	return texture;
+}
+
+//Shape rendering functions
+void RF_DrawRectangle(float x, float y, float w, float h, float r /* = 0 */, RF_Color col /* = RF_Color */, UINT texture /* = 0 */, float xScale /* = 1.f */, float yScale /* = 1.f */)
+{
+	if (r != 0.f || xScale != 1.f || yScale != 1.f)
 	{
 		glPushMatrix();
 		glTranslatef(x, y, 0.f);
 		glRotatef(r, 0.f, 0.f, 1.f);
+		glScalef(xScale, yScale, 1.f);
 		glTranslatef(-x, -y, 0.f);
 	}
 
-	glColor4f(col.r, col.g, col.b, col.a);
-	glBegin(GL_TRIANGLE_STRIP);
+	if (texture != 0)
+	{
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		glColor4f(col.r, col.g, col.b, col.a);
+		glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2f(1, 1); glVertex2f(x+w/2, y-h/2);
+		glTexCoord2f(1, 0); glVertex2f(x+w/2, y+h/2);
+		glTexCoord2f(0, 1); glVertex2f(x-w/2, y-h/2);
+		glTexCoord2f(0, 0); glVertex2f(x-w/2, y+h/2);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+	}
+	else
+	{
+		glColor4f(col.r, col.g, col.b, col.a);
+		glBegin(GL_TRIANGLE_STRIP);
 		glVertex2f(x+w/2, y-h/2);
 		glVertex2f(x+w/2, y+h/2);
 		glVertex2f(x-w/2, y-h/2);
 		glVertex2f(x-w/2, y+h/2);
-	glEnd();
+		glEnd();
+	}
 
-	if (r != 0)
+	if (r != 0.f || xScale != 1.f || yScale != 1.f)
 	{
 		glPopMatrix();
 	}

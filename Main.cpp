@@ -33,6 +33,10 @@ int main(int argc, char* args[])
 
 	bool play = true;
 
+	RF_LoadTexture("tile0000.png");
+
+	float angle = 0;
+
 	while (play)
 	{
 		RF_BeginLoop();
@@ -47,13 +51,14 @@ int main(int argc, char* args[])
 		}
 
 		//Logic
+		angle += 0.5;
 
 		//Render
 		RF_ClearWindow();
 
-		RF_DrawRectangle(0.5,.5,.5,.5, 30.f, RF_Color(0.f));
-		RF_DrawRectangle(-0.5,-.5,.5,.5, 70.f, RF_Color(0.f));
-
+		RF_DrawRectangle(0.5,0.5,.5,.5, angle, RF_Color(), 1, 2.f);
+		RF_DrawRectangle(-0.5,-.5,.5,.5, 0, RF_Color(0.f,0.f));
+		
 		RF_SwapBuffer();
 
 		RF_HandleFps();

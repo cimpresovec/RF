@@ -68,9 +68,12 @@ struct RF_Color
 //Create a window
 bool RF_CreateWindow(const std::string caption = "RF", int width = 800, int height = 600, bool fullscreen = false);
 
+//Load image/texture
+unsigned int RF_LoadTexture(const std::string);
+
 //Shape rendering functions
-//Rectangle drawing function
-void RF_DrawRectangle(float x, float y, float w, float h, float r = 0, RF_Color col = RF_Color());
+//Rectangle drawing function; r = rotation in degrees, col is color, x/yScale is for scaling the render, x/yRotOffset is for changing the pivot/origin for rotation
+void RF_DrawRectangle(float x, float y, float w, float h, float r = 0, RF_Color col = RF_Color(), UINT texture = 0, float xScale = 1.f, float yScale = 1.f);
 
 //Inline functions for clear and swap
 inline void RF_ClearWindow()
