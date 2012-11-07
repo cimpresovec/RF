@@ -16,14 +16,43 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef RF_CONFIG_H
-#define RF_CONFIG_H
+//Configuration file
+#include "RF_config.h"
+#ifdef RF_SOUND
 
-//Define which parts/modules of the framework are going to be used by uncommenting them
-#define RF_MAIN
-#define RF_RENDER
-#define RF_FTGL
-#define RF_GLEW
-#define RF_SOUND
+//This file is the rendering part of the framework
+#ifndef RF_SOUND_H
+#define RF_SOUND_H
 
-#endif //RF_CONFIG_H
+//Linker setting for libraries
+#if defined(_MSC_VER)
+#	pragma comment(lib, "irrklang.lib")
+#else
+//TODO
+#endif
+
+//Libraries needed for RF_main
+#if defined(_MSC_VER)
+#	include <irrKlang.h>
+#else
+//TODO
+#endif
+
+//Definitions
+#define RF_SoundEngine irrklang::ISoundEngine*
+#define RF_SoundSource irrklang::ISoundSource*
+
+//Inline function to create an irrklang engine
+inline irrklang::ISoundEngine* RF_CreateSoundEngine()
+{
+	return irrklang::createIrrKlangDevice();
+}
+
+//Inline functions that takes the sound engine and sound path and loads it preloaded
+inline irrklang::ISoundSource* RF_LoadSound(irrklang::ISoundEngine* soundEngine, const std::string filePath)
+{
+	return soundEngine->addSoundSourceFromFile(filePath.c_str(), irrklang::ESM_AUTO_DETECT, true);
+}
+
+#endif
+#endif

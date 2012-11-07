@@ -6,3 +6,5 @@ Debug/*
 *.vcxproj
 Log.txt
 *.png
+*.ttf
+*.mp3

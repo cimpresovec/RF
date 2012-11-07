@@ -87,6 +87,21 @@ void RF_DrawCircle(float x, float y, float r, RF_Color col = RF_Color());
 //Draw a line; w = line width
 void RF_DrawLine(float x1, float y1, float x2, float y2, float w = 1.f, RF_Color col = RF_Color());
 
+//Text rendering function
+#ifdef RF_FTGL
+//Definitions
+#define RF_Font FTGLPixmapFont*
+
+//Inline function to load a font
+inline FTGLPixmapFont* RF_LoadFont(const std::string fontPath)
+{
+	return new FTGLPixmapFont(fontPath.c_str());
+}
+
+//Draw text using a font, at position x,y with size and color. Changing SIZE is a performance hog!
+void RF_DrawText(FTGLPixmapFont* font, const std::string text, float x, float y, int size = 20, RF_Color col = RF_Color());
+#endif
+
 //Inline functions for clear and swap
 inline void RF_ClearWindow()
 {

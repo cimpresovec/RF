@@ -28,5 +28,8 @@
 #ifdef RF_RENDER
 #	include "RF_render.h"
 #endif
+#ifdef RF_SOUND
+#	include "RF_sound.h"
+#endif
 
 #endif //RF_H
