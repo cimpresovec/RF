@@ -54,6 +54,8 @@ extern SDL_Event event; //Event handler
 extern float fpsTimer; //For framerate cap
 #define RF_EventType event.type
 #define RF_EventKey event.key.keysym.sym
+#define PI 3.141592654f
+
 
 //Main function declarations
 

@@ -56,14 +56,56 @@
 
 //Definitions, etc.
 
+//Structures/classes
+//Simple color structure
+struct RF_Color
+{
+	float r, g, b, a;
+	RF_Color(float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f);
+};
+
 //Render function declarations
 //Create a window
 bool RF_CreateWindow(const std::string caption = "RF", int width = 800, int height = 600, bool fullscreen = false);
 
+//Load image/texture
+unsigned int RF_LoadTexture(const std::string);
+
+//Destroy texture
+void RF_DeleteTexture(unsigned int texture);
+
+//Shape rendering functions
+//Rectangle drawing function; r = rotation in degrees, col is color, x/yScale is for scaling the render, x/yRotOffset is for changing the pivot/origin for rotation
+void RF_DrawRectangle(float x, float y, float w, float h, float r = 0.f, RF_Color col = RF_Color(), UINT texture = 0, float xScale = 1.f, float yScale = 1.f);
+
+//Draw a triangle, works line a triangle in a rectangle
+void RF_DrawTriangle(float x, float y, float w, float h, float r = 0.f, RF_Color col = RF_Color(), float xScale = 1.f, float yScale = 1.f);
+
+//Draw a circle; r = radius
+void RF_DrawCircle(float x, float y, float r, RF_Color col = RF_Color());
+
+//Draw a line; w = line width
+void RF_DrawLine(float x1, float y1, float x2, float y2, float w = 1.f, RF_Color col = RF_Color());
+
+//Text rendering function
+#ifdef RF_FTGL
+//Definitions
+#define RF_Font FTGLPixmapFont*
+
+//Inline function to load a font
+inline FTGLPixmapFont* RF_LoadFont(const std::string fontPath)
+{
+	return new FTGLPixmapFont(fontPath.c_str());
+}
+
+//Draw text using a font, at position x,y with size and color. Changing SIZE is a performance hog!
+void RF_DrawText(FTGLPixmapFont* font, const std::string text, float x, float y, int size = 20, RF_Color col = RF_Color());
+#endif
+
 //Inline functions for clear and swap
 inline void RF_ClearWindow()
 {
-	return glClear(GL_COLOR_BUFFER_BIT);
+	return glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 inline void RF_SwapBuffer()
