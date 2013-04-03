@@ -35,15 +35,15 @@
 #include <ctime>
 
 //Linker setting for libraries
-#if defined(_MSC_VER)
-#	pragma comment(lib, "SDLmain.lib")
-#	pragma comment(lib, "SDL.lib")
+#if defined( _MSC_VER )
+#	pragma comment( lib, "SDLmain.lib" )
+#	pragma comment( lib, "SDL.lib" )
 #else
 //TODO
 #endif
 
 //Libraries needed for RF_main
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
 #	include <SDL.h>
 #else
 //TODO 
@@ -63,10 +63,10 @@ extern float fpsTimer; //For framerate cap
 bool RF_Initialize();
 
 //Log string, text is appended
-bool RF_Log(const std::string text, const std::string file = "Log.txt");
+bool RF_Log( const std::string text, const std::string file = "Log.txt" );
 
 //Clear log
-bool RF_ClearLog(const std::string file = "Log.txt");
+bool RF_ClearLog( const std::string file = "Log.txt" );
 
 //Begin loop functions for timer
 void RF_BeginLoop();
@@ -77,7 +77,7 @@ void RF_HandleFps();
 //Inline functions for event check
 inline int RF_CheckEvent()
 {
-	return SDL_PollEvent(&event);
+	return SDL_PollEvent( &event );
 }
 
 #endif // RF_MAIN_H

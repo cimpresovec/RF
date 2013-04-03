@@ -25,14 +25,14 @@
 #define RF_SOUND_H
 
 //Linker setting for libraries
-#if defined(_MSC_VER)
-#	pragma comment(lib, "irrklang.lib")
+#if defined( _MSC_VER )
+#	pragma comment( lib, "irrklang.lib" )
 #else
 //TODO
 #endif
 
 //Libraries needed for RF_main
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
 #	include <irrKlang.h>
 #else
 //TODO
@@ -49,9 +49,9 @@ inline irrklang::ISoundEngine* RF_CreateSoundEngine()
 }
 
 //Inline functions that takes the sound engine and sound path and loads it preloaded
-inline irrklang::ISoundSource* RF_LoadSound(irrklang::ISoundEngine* soundEngine, const std::string filePath)
+inline irrklang::ISoundSource* RF_LoadSound( irrklang::ISoundEngine* soundEngine, const std::string filePath )
 {
-	return soundEngine->addSoundSourceFromFile(filePath.c_str(), irrklang::ESM_AUTO_DETECT, true);
+	return soundEngine->addSoundSourceFromFile( filePath.c_str(), irrklang::ESM_AUTO_DETECT, true );
 }
 
 #endif

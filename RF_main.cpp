@@ -30,21 +30,21 @@ float fpsTimer = 0;
 //Main function definitions
 bool RF_Initialize()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
 	{
-		RF_Log(SDL_GetError());
+		RF_Log( SDL_GetError() );
 		return false;
 	}
 	return true;
 }
 
-bool RF_Log(const std::string text, const std::string file /* = "Log.txt" */)
+bool RF_Log( const std::string text, const std::string file /* = "Log.txt" */ )
 {
 	std::ofstream logFile;
 
-	logFile.open(file, std::ios::out | std::ios::app);
+	logFile.open( file, std::ios::out | std::ios::app );
 	
-	if (!logFile.is_open())
+	if ( !logFile.is_open() )
 	{
 		std::cout << "Can't open " << file << "!\n";
 		return false;
@@ -52,9 +52,9 @@ bool RF_Log(const std::string text, const std::string file /* = "Log.txt" */)
 
 	//Get DateTime
 	time_t rawtime;
-	time (&rawtime);
+	time ( &rawtime );
 	char time[100];
-	ctime_s(time, 100, &rawtime);
+	ctime_s( time, 100, &rawtime );
 
 	//Log
 	logFile << time << text << "\n\n";
@@ -68,9 +68,9 @@ bool RF_ClearLog(const std::string file /* = "Log.txt" */)
 {
 	std::ofstream logFile;
 
-	logFile.open(file);
+	logFile.open( file );
 
-	if(!logFile.is_open())
+	if( !logFile.is_open() )
 	{
 		std::cout << "Can't open " << file << "!\n";
 		return false;

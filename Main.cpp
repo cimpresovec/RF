@@ -240,10 +240,10 @@ int main(int argc, char* args[])
 		player2.render();
 		ball.render();
 		//Fonti TODO 
-		/*
+		glPushMatrix();
 		glScalef(1.f/400.,1./400.,1.);
 		font->Render("Hello World. Danes je lep dan");
-		*/
+		glPopMatrix ();
 
 		RF_SwapBuffer();
 
