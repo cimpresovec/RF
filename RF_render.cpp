@@ -233,7 +233,7 @@ void RF_DrawLine(float x1, float y1, float x2, float y2, float w /* = 1 */, RF_C
 
 //Text rendering function
 #ifdef RF_FTGL
-void RF_DrawText(FTGLPixmapFont* font, const std::string text, float x, float y, int size /* = 10.f */, RF_Color col /* = RF_Color */)
+void RF_DrawText(FTGLTextureFont* font, const std::string text, float x, float y, int size /* = 10.f */, RF_Color col /* = RF_Color */)
 {
 	//Check if the font size is the same, try to AVOID CHANGING SIZE
 	if (font->FaceSize() != size)
@@ -244,9 +244,14 @@ void RF_DrawText(FTGLPixmapFont* font, const std::string text, float x, float y,
 	glColor4f(col.r, col.g, col.b, col.a);
 
 	glPushMatrix();
-	//Move to position
-	glRasterPos2f(x, y);
+	//glRotatef(180,1,0,0);
+
+	//float height = font->BBox(text.c_str()).Upper().Y() - font->BBox(text.c_str()).Lower().Y();
+
+	//glTranslatef(x,-height-y,0);
+
 	font->Render(text.c_str());
+
 	glPopMatrix();
 }
 #endif
