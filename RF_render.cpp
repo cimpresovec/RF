@@ -34,6 +34,10 @@ RF_Color::RF_Color( float r /* = 1.f */, float g /* = 1.f */, float b /* = 1.f *
 	this->a = a;
 }
 
+//Global window variables
+unsigned int RF_WindowWidth_ = 0;
+unsigned int RF_WindowHeight_ = 0;
+
 //Render function definitions
 bool RF_CreateWindow( const std::string caption /* = "RF" */, const int width /* = 800 */, const int height /* = 600 */, const bool fullscreen /* = false */ )
 {
@@ -66,6 +70,10 @@ bool RF_CreateWindow( const std::string caption /* = "RF" */, const int width /*
 			return false;
 		}
 	}
+
+	//Set globals
+	RF_WindowWidth_ = width;
+	RF_WindowHeight_ = height;
 
 	//OpenGL specific functions
 	glClearColor( 0, 0, 0, 1 );
@@ -231,9 +239,17 @@ void RF_DrawLine( const float x1, const float y1, const float x2, const float y2
 	glEnd();
 }
 
+void RF_GetMousePosition( float& x, float& y )
+{
+	int x_, y_;
+	SDL_GetMouseState( &x_, &y_ );
+	x = (x / (RF_WindowWidth_ / 2.f)) - 1.0f;
+	y = -((y / (RF_WindowHeight_ / 2.f)) - 1.0f);
+}
+
 //Text rendering function
 #ifdef RF_FTGL
-void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size /*= 20*/, const RF_Color& col /*= RF_Color()*/ )
+void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size /*= 20*/, const RF_Color& col /*= RF_Color()*/, const float scaleFactor /*= 400.f*/ )
 {
 	//Check if the font size is the same, try to AVOID CHANGING SIZE
 	if ( font->FaceSize()!= size )
@@ -244,11 +260,8 @@ void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, 
 	glColor4f( col.r, col.g, col.b, col.a );
 
 	glPushMatrix();
-	//glRotatef(180,1,0,0);
 
-	//float height = font->BBox(text.c_str()).Upper().Y()- font->BBox(text.c_str()).Lower().Y();
-
-	//glTranslatef(x,-height-y,0);
+	glScalef( 1.f/scaleFactor, 1.f/scaleFactor, 1.f );
 
 	font->Render( text.c_str() );
 

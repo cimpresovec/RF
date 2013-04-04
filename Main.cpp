@@ -186,9 +186,13 @@ int main( int argc, char* args[] )
 
 	if (!RF_CreateWindow("RF", 800, 600, false)) return false;
 
-	RF_SoundEngine soundEngine = RF_CreateSoundEngine();
-	RF_SoundSource music = RF_LoadSound(soundEngine, "music.mp3");
+	RF_SoundEngine* soundEngine = RF_CreateSoundEngine();
+	RF_SoundSource* music = RF_LoadSound(soundEngine, "music.mp3");
 	soundEngine->play2D(music);
+
+	RF_SoundSource* effect = RF_LoadSound( soundEngine, "effecft.mp3" );
+	soundEngine->play2D( effect );
+	RF_DeleteSound( soundEngine, effect );
 
 	bool play = true;
 
@@ -240,10 +244,8 @@ int main( int argc, char* args[] )
 		player2.render();
 		ball.render();
 		//Fonti TODO 
-		glPushMatrix();
-		glScalef(1.f/400.,1./400.,1.);
-		font->Render("Hello World. Danes je lep dan");
-		glPopMatrix ();
+
+		RF_DrawText( font, "Test test test test", 0, 0 );
 
 		RF_SwapBuffer();
 

@@ -64,6 +64,10 @@ struct RF_Color
 	RF_Color( float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f );
 };
 
+//Some window globals
+extern unsigned int RF_WindowWidth_;
+extern unsigned int RF_WindowHeight_;
+
 //Render function declarations
 //Create a window
 bool RF_CreateWindow( const std::string caption = "RF", const int width = 800, const int height = 600, const bool fullscreen = false);
@@ -100,7 +104,7 @@ inline FTGLTextureFont* RF_LoadFont( const std::string fontPath )
 }
 
 //Draw text using a font, at position x,y with size and color. Changing SIZE is a performance hog!
-void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size = 20, const RF_Color& col = RF_Color() );
+void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size = 25, const RF_Color& col = RF_Color(), const float scaleFactor = 400.f );
 #endif
 
 //Inline functions for clear and swap
@@ -113,6 +117,9 @@ inline void RF_SwapBuffer()
 {
 	return SDL_GL_SwapBuffers();
 }
+
+//Get mouse position in passed variables to get mouse position, dependent on window size
+void RF_GetMousePosition( float& x, float& y );
 
 #endif //RF_RENDER_H
 #endif //RF_RENDER

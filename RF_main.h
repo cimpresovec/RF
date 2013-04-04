@@ -54,6 +54,7 @@ extern SDL_Event event; //Event handler
 extern float fpsTimer; //For framerate cap
 #define RF_EventType event.type
 #define RF_EventKey event.key.keysym.sym
+#define RF_EventMouse event.button.button
 #define PI 3.141592654f
 
 
@@ -78,6 +79,12 @@ void RF_HandleFps();
 inline int RF_CheckEvent()
 {
 	return SDL_PollEvent( &event );
+}
+
+//Inline function to calculate angle between the line from point(0,0) to passed coordinates, relative to X axis, angle increases counter-clockwise
+inline float RF_CalculateAngle( const float xPosition, const float yPosition )
+{
+	return atan2f( yPosition, xPosition ) * 180 / PI;
 }
 
 #endif // RF_MAIN_H
