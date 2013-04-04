@@ -35,15 +35,15 @@
 #include <ctime>
 
 //Linker setting for libraries
-#if defined(_MSC_VER)
-#	pragma comment(lib, "SDLmain.lib")
-#	pragma comment(lib, "SDL.lib")
+#if defined( _MSC_VER )
+#	pragma comment( lib, "SDLmain.lib" )
+#	pragma comment( lib, "SDL.lib" )
 #else
 //TODO
 #endif
 
 //Libraries needed for RF_main
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
 #	include <SDL.h>
 #else
 //TODO 
@@ -54,6 +54,7 @@ extern SDL_Event event; //Event handler
 extern float fpsTimer; //For framerate cap
 #define RF_EventType event.type
 #define RF_EventKey event.key.keysym.sym
+#define RF_EventMouse event.button.button
 #define PI 3.141592654f
 
 
@@ -63,10 +64,10 @@ extern float fpsTimer; //For framerate cap
 bool RF_Initialize();
 
 //Log string, text is appended
-bool RF_Log(const std::string text, const std::string file = "Log.txt");
+bool RF_Log( const std::string text, const std::string file = "Log.txt" );
 
 //Clear log
-bool RF_ClearLog(const std::string file = "Log.txt");
+bool RF_ClearLog( const std::string file = "Log.txt" );
 
 //Begin loop functions for timer
 void RF_BeginLoop();
@@ -77,7 +78,24 @@ void RF_HandleFps();
 //Inline functions for event check
 inline int RF_CheckEvent()
 {
-	return SDL_PollEvent(&event);
+	return SDL_PollEvent( &event );
+}
+
+//Inline function to calculate angle between the line from point(0,0) to passed coordinates, relative to X axis, angle increases counter-clockwise
+inline float RF_CalculateAngle( const float xPosition, const float yPosition )
+{
+	return atan2f( yPosition, xPosition ) * 180 / PI;
+}
+
+//Inline function to calculate position relative to angle
+inline float RF_CalculateAnglePositionX ( const float angle )
+{
+	return cosf( angle * PI / 180 );
+}
+
+inline float RF_CalculateAnglePositionY( const float angle )
+{
+	return sinf( angle * PI / 180 );
 }
 
 #endif // RF_MAIN_H
