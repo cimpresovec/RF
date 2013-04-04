@@ -87,5 +87,16 @@ inline float RF_CalculateAngle( const float xPosition, const float yPosition )
 	return atan2f( yPosition, xPosition ) * 180 / PI;
 }
 
+//Inline function to calculate position relative to angle
+inline float RF_CalculateAnglePositionX ( const float angle )
+{
+	return cosf( angle * PI / 180 );
+}
+
+inline float RF_CalculateAnglePositionY( const float angle )
+{
+	return sinf( angle * PI / 180 );
+}
+
 #endif // RF_MAIN_H
 #endif //RF_MAIN
