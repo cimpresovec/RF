@@ -177,7 +177,7 @@ public:
 		RF_DrawRectangle(x, y, w, h, 0.f, RF_Color(1, 0, 0));
 	}
 };
-int main(int argc, char* args[])
+int main( int argc, char* args[] )
 {
 	if (!RF_Initialize())
 	{

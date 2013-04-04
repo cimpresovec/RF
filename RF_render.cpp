@@ -2,7 +2,7 @@
 * Copyright (c)2012-2012 Luka Horvat (redreaper132@gmail.com)http://www.redgamedevblog.blogspot.com
 *
 * This software is provided 'as-is', without any express or implied
-* warranty.  In no event will the authors be held liable for any damages
+* warranty. In no event will the authors be held liable for any damages
 * arising from the use of this software.
 * Permission is granted to anyone to use this software for any purpose,
 * including commercial applications, and to alter it and redistribute it
@@ -50,9 +50,9 @@ bool RF_CreateWindow( const std::string caption /* = "RF" */, const int width /*
 	SDL_WM_SetCaption( caption.c_str (), NULL );
 
 	//Create video mode
-	if  ( !fullscreen )
+	if ( !fullscreen )
 	{
-		if  ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL ) == NULL )
+		if ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL ) == NULL )
 		{
 			RF_Log( SDL_GetError() );
 			return false;
@@ -60,7 +60,7 @@ bool RF_CreateWindow( const std::string caption /* = "RF" */, const int width /*
 	}
 	else //Fullscreen
 	{
-		if  ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL | SDL_FULLSCREEN ) == NULL )
+		if ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL | SDL_FULLSCREEN ) == NULL )
 		{
 			RF_Log ( SDL_GetError() );
 			return false;
@@ -78,14 +78,14 @@ bool RF_CreateWindow( const std::string caption /* = "RF" */, const int width /*
 	glDisable( GL_DEPTH_TEST );
 	glDisable( GL_LIGHTING );
 	
-	//glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST  );
-	//glHint ( GL_POLYGON_SMOOTH_HINT, GL_NICEST  );
+	//glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
+	//glHint ( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
 	//glEnable ( GL_LINE_SMOOTH );
 	//glEnable ( GL_POLYGON_SMOOTH );
 
 	//GLEW init, the functions doesn't return false if GLEW fails
 #ifdef RF_GLEW
-	if  ( glewInit() != GLEW_OK )
+	if ( glewInit() != GLEW_OK )
 	{
 		std::cout << "GLEW failed to start\n"; 
 		RF_Log( "GLEW failed to start" );
@@ -142,7 +142,7 @@ void RF_DeleteTexture( unsigned int texture )
 //Shape rendering functions
 void RF_DrawRectangle( const float x, const float y, const float w, const float h, const float r /*= 0.f*/, const RF_Color& col /*= RF_Color()*/, const UINT texture /*= 0*/, const float xScale /*= 1.f*/, const float yScale /*= 1.f*/ )
 {
-	if  ( r != 0.f || xScale != 1.f || yScale != 1.f )
+	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
 	{
 		glPushMatrix();
 		glTranslatef( x, y, 0.f );
@@ -151,7 +151,7 @@ void RF_DrawRectangle( const float x, const float y, const float w, const float 
 		glTranslatef( -x, -y, 0.f );
 	}
 
-	if  ( texture != 0 )
+	if ( texture != 0 )
 	{
 		glEnable( GL_TEXTURE_2D );
 		glBindTexture( GL_TEXTURE_2D, texture );
@@ -177,7 +177,7 @@ void RF_DrawRectangle( const float x, const float y, const float w, const float 
 		glEnd();
 	}
 
-	if  ( r != 0.f || xScale != 1.f || yScale != 1.f )
+	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
 	{
 		glPopMatrix();
 	}
@@ -185,7 +185,7 @@ void RF_DrawRectangle( const float x, const float y, const float w, const float 
 
 void RF_DrawTriangle( const float x, const float y, const float w, const float h, const float r /*= 0.f*/, const RF_Color& col /*= RF_Color()*/, const float xScale /*= 1.f*/, const float yScale /*= 1.f */ )
 {
-	if  ( r != 0.f || xScale != 1.f || yScale != 1.f )
+	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
 	{
 		glPushMatrix();
 		glTranslatef( x, y, 0.f );
@@ -201,7 +201,7 @@ void RF_DrawTriangle( const float x, const float y, const float w, const float h
 	glVertex2f( x-w/2, y-h/2 );
 	glEnd();
 
-	if  ( r != 0.f || xScale != 1.f || yScale != 1.f )
+	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
 	{
 		glPopMatrix();
 	}
