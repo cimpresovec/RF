@@ -49,53 +49,56 @@
 //TODO 
 #endif
 
-//Objects, definitions, etc.
-extern SDL_Event event; //Event handler
-extern float fpsTimer; //For framerate cap
-#define RF_EventType event.type
-#define RF_EventKey event.key.keysym.sym
-#define RF_EventMouse event.button.button
-#define PI 3.141592654f
-
-
-//Main function declarations
-
-//Initialize SDL
-bool RF_Initialize();
-
-//Log string, text is appended
-bool RF_Log( const std::string text, const std::string file = "Log.txt" );
-
-//Clear log
-bool RF_ClearLog( const std::string file = "Log.txt" );
-
-//Begin loop functions for timer
-void RF_BeginLoop();
-
-//Framerate cap/delay
-void RF_HandleFps();
-
-//Inline functions for event check
-inline int RF_CheckEvent()
+namespace rf
 {
-	return SDL_PollEvent( &event );
-}
+	//Objects, definitions, etc.
+	extern SDL_Event event; //Event handler
+	extern float fpsTimer; //For framerate cap
+	#define eventType event.type
+	#define eventKey event.key.keysym.sym
+	#define eventMouse event.button.button
+	#define PI 3.141592654f
 
-//Inline function to calculate angle between the line from point(0,0) to passed coordinates, relative to X axis, angle increases counter-clockwise
-inline float RF_CalculateAngle( const float xPosition, const float yPosition )
-{
-	return atan2f( yPosition, xPosition ) * 180 / PI;
-}
 
-//Inline function to calculate position relative to angle
-inline float RF_CalculateAnglePositionX ( const float angle )
-{
-	return cosf( angle * PI / 180 );
-}
+	//Main function declarations
 
-inline float RF_CalculateAnglePositionY( const float angle )
-{
-	return sinf( angle * PI / 180 );
+	//Initialize SDL
+	bool initialize();
+
+	//Log string, text is appended
+	bool log( const std::string text, const std::string file = "Log.txt" );
+
+	//Clear log
+	bool clearLog( const std::string file = "Log.txt" );
+
+	//Begin loop functions for timer
+	void beginLoop();
+
+	//Framerate cap/delay
+	void handleFps();
+
+	//Inline functions for event check
+	inline int checkEvent()
+	{
+		return SDL_PollEvent( &event );
+	}
+
+	//Inline function to calculate angle between the line from point(0,0) to passed coordinates, relative to X axis, angle increases counter-clockwise
+	inline float calculateAngle( const float xPosition, const float yPosition )
+	{
+		return atan2f( yPosition, xPosition ) * 180 / PI;
+	}
+
+	//Inline function to calculate position relative to angle
+	inline float calculateAnglePositionX ( const float angle )
+	{
+		return cosf( angle * PI / 180 );
+	}
+
+	inline float calculateAnglePositionY( const float angle )
+	{
+		return sinf( angle * PI / 180 );
+	}
 }
 
 #endif // RF_MAIN_H

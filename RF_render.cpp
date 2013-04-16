@@ -24,250 +24,253 @@
 #include "RF_main.h"
 #include "RF_render.h"
 
-//Structures/classes
-//Color structure
-RF_Color::RF_Color( float r /* = 1.f */, float g /* = 1.f */, float b /* = 1.f */, float a /* = 1.f */ )
+namespace rf
 {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-	this->a = a;
-}
-
-//Global window variables
-unsigned int RF_WindowWidth_ = 0;
-unsigned int RF_WindowHeight_ = 0;
-
-//Render function definitions
-bool RF_CreateWindow( const std::string caption /* = "RF" */, const int width /* = 800 */, const int height /* = 600 */, const bool fullscreen /* = false */ )
-{
-	//Set GL attributes
-	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
-	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 8 );
-	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 8 );
-	SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8 );
-	SDL_GL_SetAttribute( SDL_GL_BUFFER_SIZE, 32 );
-	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-	//Set caption
-	SDL_WM_SetCaption( caption.c_str (), NULL );
-
-	//Create video mode
-	if ( !fullscreen )
+	//Structures/classes
+	//Color structure
+	Color::Color( float r /* = 1.f */, float g /* = 1.f */, float b /* = 1.f */, float a /* = 1.f */ )
 	{
-		if ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL ) == NULL )
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
+	}
+
+	//Global window variables
+	unsigned int windowWidth_ = 0;
+	unsigned int windowHeight_ = 0;
+
+	//Render function definitions
+	bool createWindow( const std::string caption /* = "RF" */, const int width /* = 800 */, const int height /* = 600 */, const bool fullscreen /* = false */ )
+	{
+		//Set GL attributes
+		SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_BUFFER_SIZE, 32 );
+		SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
+		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+		//Set caption
+		SDL_WM_SetCaption( caption.c_str (), NULL );
+
+		//Create video mode
+		if ( !fullscreen )
 		{
-			RF_Log( SDL_GetError() );
-			return false;
+			if ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL ) == NULL )
+			{
+				log( SDL_GetError() );
+				return false;
+			}
 		}
-	}
-	else //Fullscreen
-	{
-		if ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL | SDL_FULLSCREEN ) == NULL )
+		else //Fullscreen
 		{
-			RF_Log ( SDL_GetError() );
-			return false;
+			if ( SDL_SetVideoMode( width, height, 32, SDL_OPENGL | SDL_FULLSCREEN ) == NULL )
+			{
+				log ( SDL_GetError() );
+				return false;
+			}
 		}
+
+		//Set globals
+		windowWidth_ = width;
+		windowHeight_ = height;
+
+		//OpenGL specific functions
+		glClearColor( 0, 0, 0, 1 );
+		glShadeModel( GL_SMOOTH );
+		glViewport( 0, 0, width, height );
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+		glEnable( GL_BLEND );
+		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+		glDisable( GL_DEPTH_TEST );
+		glDisable( GL_LIGHTING );
+
+		//glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
+		//glHint ( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+		//glEnable ( GL_LINE_SMOOTH );
+		//glEnable ( GL_POLYGON_SMOOTH );
+
+		//GLEW init, the functions doesn't return false if GLEW fails
+		#ifdef RF_GLEW
+		if ( glewInit() != GLEW_OK )
+		{
+			std::cout << "GLEW failed to start\n"; 
+			log( "GLEW failed to start" );
+		}
+		#endif //RF_GLEW
+
+		return true;
 	}
 
-	//Set globals
-	RF_WindowWidth_ = width;
-	RF_WindowHeight_ = height;
-
-	//OpenGL specific functions
-	glClearColor( 0, 0, 0, 1 );
-	glShadeModel( GL_SMOOTH );
-	glViewport( 0, 0, width, height );
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	glEnable( GL_BLEND );
-	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-	glDisable( GL_DEPTH_TEST );
-	glDisable( GL_LIGHTING );
-	
-	//glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
-	//glHint ( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-	//glEnable ( GL_LINE_SMOOTH );
-	//glEnable ( GL_POLYGON_SMOOTH );
-
-	//GLEW init, the functions doesn't return false if GLEW fails
-#ifdef RF_GLEW
-	if ( glewInit() != GLEW_OK )
+	unsigned int loadTexture( const std::string fileName )
 	{
-		std::cout << "GLEW failed to start\n"; 
-		RF_Log( "GLEW failed to start" );
-	}
-#endif //RF_GLEW
+		SDL_Surface* image = IMG_Load( fileName.c_str() );
 
-	return true;
-}
+		if ( !image )
+		{
+			std::string errMsg = "Problem loading image " + fileName;
+			std::cout << errMsg << "\n";
+			log( errMsg );
+			return 0;
+		}
 
-unsigned int RF_LoadTexture( const std::string fileName )
-{
-	SDL_Surface* image = IMG_Load( fileName.c_str() );
+		//Display format
+		SDL_DisplayFormatAlpha( image );
 
-	if ( !image )
-	{
-		std::string errMsg = "Problem loading image " + fileName;
-		std::cout << errMsg << "\n";
-		RF_Log( errMsg );
-		return 0;
-	}
+		//Generating the texture
+		unsigned int texture = 0;
 
-	//Display format
-	SDL_DisplayFormatAlpha( image );
+		glGenTextures( 1, &texture );
 
-	//Generating the texture
-	unsigned int texture = 0;
-
-	glGenTextures( 1, &texture );
-
-	glEnable( GL_TEXTURE_2D );
-	glBindTexture( GL_TEXTURE_2D, texture );
-
-	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-
-	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels );
-
-	SDL_FreeSurface( image );
-
-	glDisable( GL_TEXTURE_2D );
-
-	return texture;
-}
-
-void RF_DeleteTexture( unsigned int texture )
-{
-	glDeleteTextures(1, &texture);
-	texture = 0;
-}
-
-//Shape rendering functions
-void RF_DrawRectangle( const float x, const float y, const float w, const float h, const float r /*= 0.f*/, const RF_Color& col /*= RF_Color()*/, const UINT texture /*= 0*/, const float xScale /*= 1.f*/, const float yScale /*= 1.f*/ )
-{
-	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
-	{
-		glPushMatrix();
-		glTranslatef( x, y, 0.f );
-		glRotatef( r, 0.f, 0.f, 1.f );
-		glScalef( xScale, yScale, 1.f );
-		glTranslatef( -x, -y, 0.f );
-	}
-
-	if ( texture != 0 )
-	{
 		glEnable( GL_TEXTURE_2D );
 		glBindTexture( GL_TEXTURE_2D, texture );
 
-		glColor4f( col.r, col.g, col.b, col.a );
-		glBegin( GL_TRIANGLE_STRIP );
-		glTexCoord2f( 1, 1 ); glVertex2f( x+w/2, y-h/2 );
-		glTexCoord2f( 1, 0 ); glVertex2f( x+w/2, y+h/2 );
-		glTexCoord2f( 0, 1 ); glVertex2f( x-w/2, y-h/2 );
-		glTexCoord2f( 0, 0 ); glVertex2f( x-w/2, y+h/2 );
-		glEnd();
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels );
+
+		SDL_FreeSurface( image );
 
 		glDisable( GL_TEXTURE_2D );
+
+		return texture;
 	}
-	else
+
+	void deleteTexture( unsigned int texture )
+	{
+		glDeleteTextures(1, &texture);
+		texture = 0;
+	}
+
+	//Shape rendering functions
+	void drawRectangle( const float x, const float y, const float w, const float h, const float r /*= 0.f*/, const Color& col /*= Color()*/, const UINT texture /*= 0*/, const float xScale /*= 1.f*/, const float yScale /*= 1.f*/ )
+	{
+		if ( r != 0.f || xScale != 1.f || yScale != 1.f )
+		{
+			glPushMatrix();
+			glTranslatef( x, y, 0.f );
+			glRotatef( r, 0.f, 0.f, 1.f );
+			glScalef( xScale, yScale, 1.f );
+			glTranslatef( -x, -y, 0.f );
+		}
+
+		if ( texture != 0 )
+		{
+			glEnable( GL_TEXTURE_2D );
+			glBindTexture( GL_TEXTURE_2D, texture );
+
+			glColor4f( col.r, col.g, col.b, col.a );
+			glBegin( GL_TRIANGLE_STRIP );
+			glTexCoord2f( 1, 1 ); glVertex2f( x+w/2, y-h/2 );
+			glTexCoord2f( 1, 0 ); glVertex2f( x+w/2, y+h/2 );
+			glTexCoord2f( 0, 1 ); glVertex2f( x-w/2, y-h/2 );
+			glTexCoord2f( 0, 0 ); glVertex2f( x-w/2, y+h/2 );
+			glEnd();
+
+			glDisable( GL_TEXTURE_2D );
+		}
+		else
+		{
+			glColor4f( col.r, col.g, col.b, col.a );
+			glBegin( GL_TRIANGLE_STRIP );
+			glVertex2f( x+w/2, y-h/2 );
+			glVertex2f( x+w/2, y+h/2 );
+			glVertex2f( x-w/2, y-h/2 );
+			glVertex2f( x-w/2, y+h/2 );
+			glEnd();
+		}
+
+		if ( r != 0.f || xScale != 1.f || yScale != 1.f )
+		{
+			glPopMatrix();
+		}
+	}
+
+	void drawTriangle( const float x, const float y, const float w, const float h, const float r /*= 0.f*/, const Color& col /*= Color()*/, const float xScale /*= 1.f*/, const float yScale /*= 1.f */ )
+	{
+		if ( r != 0.f || xScale != 1.f || yScale != 1.f )
+		{
+			glPushMatrix();
+			glTranslatef( x, y, 0.f );
+			glRotatef( r, 0.f, 0.f, 1.f );
+			glScalef( xScale, yScale, 1.f );
+			glTranslatef( -x, -y, 0.f );
+		}
+
+		glColor4f( col.r, col.g, col.b, col.a );
+		glBegin( GL_TRIANGLES );
+		glVertex2f( x+w/2, y-h/2 );
+		glVertex2f( x, y+h/2 );
+		glVertex2f( x-w/2, y-h/2 );
+		glEnd();
+
+		if ( r != 0.f || xScale != 1.f || yScale != 1.f )
+		{
+			glPopMatrix();
+		}
+	}
+
+	void drawCircle( const float x, const float y, const float r, const Color& col /*= Color()*/ )
 	{
 		glColor4f( col.r, col.g, col.b, col.a );
-		glBegin( GL_TRIANGLE_STRIP );
-		glVertex2f( x+w/2, y-h/2 );
-		glVertex2f( x+w/2, y+h/2 );
-		glVertex2f( x-w/2, y-h/2 );
-		glVertex2f( x-w/2, y+h/2 );
+
+		glBegin( GL_TRIANGLE_FAN );
+		glVertex2f( x, y );
+		for ( float angle = 0; angle <= 2*PI+.2f; angle += .2f )
+		{
+			glVertex2f (x + sin( angle )* r, y + cos( angle )* r );
+		}
 		glEnd();
 	}
 
-	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
+	void drawLine( const float x1, const float y1, const float x2, const float y2, const float w /*= 1.f*/, const Color& col /*= Color()*/ )
 	{
-		glPopMatrix();
-	}
-}
+		glColor4f( col.r, col.g, col.b, col.a );
 
-void RF_DrawTriangle( const float x, const float y, const float w, const float h, const float r /*= 0.f*/, const RF_Color& col /*= RF_Color()*/, const float xScale /*= 1.f*/, const float yScale /*= 1.f */ )
-{
-	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
+		glLineWidth( w );
+		glBegin( GL_LINES );
+		glVertex2f( x1, y1 );
+		glVertex2f( x2, y2 );
+		glEnd();
+	}
+
+	void getMousePosition( float& x, float& y )
 	{
+		int x_, y_;
+		SDL_GetMouseState( &x_, &y_ );
+		x = (x / (windowWidth_ / 2.f)) - 1.0f;
+		y = -((y / (windowHeight_ / 2.f)) - 1.0f);
+	}
+
+	//Text rendering function
+	#ifdef RF_FTGL
+	void drawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size /*= 20*/, const Color& col /*= Color()*/, const float scaleFactor /*= 400.f*/ )
+	{
+		//Check if the font size is the same, try to AVOID CHANGING SIZE
+		if ( font->FaceSize()!= size )
+		{
+			font->FaceSize( size );
+		}
+
+		glColor4f( col.r, col.g, col.b, col.a );
+
 		glPushMatrix();
-		glTranslatef( x, y, 0.f );
-		glRotatef( r, 0.f, 0.f, 1.f );
-		glScalef( xScale, yScale, 1.f );
-		glTranslatef( -x, -y, 0.f );
-	}
 
-	glColor4f( col.r, col.g, col.b, col.a );
-	glBegin( GL_TRIANGLES );
-	glVertex2f( x+w/2, y-h/2 );
-	glVertex2f( x, y+h/2 );
-	glVertex2f( x-w/2, y-h/2 );
-	glEnd();
+		glScalef( 1.f/scaleFactor, 1.f/scaleFactor, 1.f );
 
-	if ( r != 0.f || xScale != 1.f || yScale != 1.f )
-	{
+		font->Render( text.c_str() );
+
 		glPopMatrix();
 	}
+
+	#endif
 }
-
-void RF_DrawCircle( const float x, const float y, const float r, const RF_Color& col /*= RF_Color()*/ )
-{
-	glColor4f( col.r, col.g, col.b, col.a );
-
-	glBegin( GL_TRIANGLE_FAN );
-	glVertex2f( x, y );
-	for ( float angle = 0; angle <= 2*PI+.2f; angle += .2f )
-	{
-		glVertex2f (x + sin( angle )* r, y + cos( angle )* r );
-	}
-	glEnd();
-}
-
-void RF_DrawLine( const float x1, const float y1, const float x2, const float y2, const float w /*= 1.f*/, const RF_Color& col /*= RF_Color()*/ )
-{
-	glColor4f( col.r, col.g, col.b, col.a );
-
-	glLineWidth( w );
-	glBegin( GL_LINES );
-	glVertex2f( x1, y1 );
-	glVertex2f( x2, y2 );
-	glEnd();
-}
-
-void RF_GetMousePosition( float& x, float& y )
-{
-	int x_, y_;
-	SDL_GetMouseState( &x_, &y_ );
-	x = (x / (RF_WindowWidth_ / 2.f)) - 1.0f;
-	y = -((y / (RF_WindowHeight_ / 2.f)) - 1.0f);
-}
-
-//Text rendering function
-#ifdef RF_FTGL
-void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size /*= 20*/, const RF_Color& col /*= RF_Color()*/, const float scaleFactor /*= 400.f*/ )
-{
-	//Check if the font size is the same, try to AVOID CHANGING SIZE
-	if ( font->FaceSize()!= size )
-	{
-		font->FaceSize( size );
-	}
-
-	glColor4f( col.r, col.g, col.b, col.a );
-
-	glPushMatrix();
-
-	glScalef( 1.f/scaleFactor, 1.f/scaleFactor, 1.f );
-
-	font->Render( text.c_str() );
-
-	glPopMatrix();
-}
-
-#endif
 
 #endif //RF_RENDER

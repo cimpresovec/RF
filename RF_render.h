@@ -54,72 +54,75 @@
 //TODO 
 #endif
 
-//Definitions, etc.
-
-//Structures/classes
-//Simple color structure
-struct RF_Color
+namespace rf
 {
-	float r, g, b, a;
-	RF_Color( float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f );
-};
+	//Definitions, etc.
 
-//Some window globals
-extern unsigned int RF_WindowWidth_;
-extern unsigned int RF_WindowHeight_;
+	//Structures/classes
+	//Simple color structure
+	struct Color
+	{
+		float r, g, b, a;
+		Color( float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f );
+	};
 
-//Render function declarations
-//Create a window
-bool RF_CreateWindow( const std::string caption = "RF", const int width = 800, const int height = 600, const bool fullscreen = false);
+	//Some window globals
+	extern unsigned int windowWidth_;
+	extern unsigned int windowHeight_;
 
-//Load image/texture
-unsigned int RF_LoadTexture( const std::string );
+	//Render function declarations
+	//Create a window
+	bool createWindow( const std::string caption = "RF", const int width = 800, const int height = 600, const bool fullscreen = false);
 
-//Destroy texture
-void RF_DeleteTexture(unsigned int texture );
+	//Load image/texture
+	unsigned int loadTexture( const std::string );
 
-//Shape rendering functions
-//Rectangle drawing function; r = rotation in degrees, col is color, x/yScale is for scaling the render, x/yRotOffset is for changing the pivot/origin for rotation
-void RF_DrawRectangle( const float x, const float y, const float w, const float h, const float r = 0.f, const RF_Color& col = RF_Color(), const UINT texture = 0, const float xScale = 1.f, const float yScale = 1.f );
+	//Destroy texture
+	void deleteTexture( unsigned int texture );
 
-//Draw a triangle, works line a triangle in a rectangle
-void RF_DrawTriangle( const float x, const float y, const float w, const float h, const float r = 0.f, const RF_Color& col = RF_Color(), const float xScale = 1.f, const float yScale = 1.f );
+	//Shape rendering functions
+	//Rectangle drawing function; r = rotation in degrees, col is color, x/yScale is for scaling the render, x/yRotOffset is for changing the pivot/origin for rotation
+	void drawRectangle( const float x, const float y, const float w, const float h, const float r = 0.f, const Color& col = Color(), const UINT texture = 0, const float xScale = 1.f, const float yScale = 1.f );
 
-//Draw a circle; r = radius
-void RF_DrawCircle( const float x, const float y, const float r, const RF_Color& col = RF_Color() );
+	//Draw a triangle, works line a triangle in a rectangle
+	void drawTriangle( const float x, const float y, const float w, const float h, const float r = 0.f, const Color& col = Color(), const float xScale = 1.f, const float yScale = 1.f );
 
-//Draw a line; w = line width
-void RF_DrawLine( const float x1, const float y1, const float x2, const float y2, const float w = 1.f, const RF_Color& col = RF_Color() );
+	//Draw a circle; r = radius
+	void drawCircle( const float x, const float y, const float r, const Color& col = Color() );
 
-//Text rendering function
-#ifdef RF_FTGL
+	//Draw a line; w = line width
+	void drawLine( const float x1, const float y1, const float x2, const float y2, const float w = 1.f, const Color& col = Color() );
 
-//Definitions
-#define RF_Font FTGLTextureFont*
+	//Text rendering function
+	#ifdef RF_FTGL
 
-//Inline function to load a font
-inline FTGLTextureFont* RF_LoadFont( const std::string fontPath )
-{
-	return new FTGLTextureFont( fontPath.c_str() );
+	//Definitions
+	typedef FTGLTextureFont* Font;
+
+	//Inline function to load a font
+	inline FTGLTextureFont* loadFont( const std::string fontPath )
+	{
+		return new FTGLTextureFont( fontPath.c_str() );
+	}
+
+	//Draw text using a font, at position x,y with size and color. Changing SIZE is a performance hog!
+	void drawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size = 25, const Color& col = Color(), const float scaleFactor = 400.f );
+	#endif
+
+	//Inline functions for clear and swap
+	inline void clearWindow()
+	{
+		return glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	}
+
+	inline void swapBuffer()
+	{
+		return SDL_GL_SwapBuffers();
+	}
+
+	//Get mouse position in passed variables to get mouse position, dependent on window size
+	void getMousePosition( float& x, float& y );
 }
-
-//Draw text using a font, at position x,y with size and color. Changing SIZE is a performance hog!
-void RF_DrawText( FTGLTextureFont* font, const std::string text, const float x, const float y, const int size = 25, const RF_Color& col = RF_Color(), const float scaleFactor = 400.f );
-#endif
-
-//Inline functions for clear and swap
-inline void RF_ClearWindow()
-{
-	return glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-}
-
-inline void RF_SwapBuffer()
-{
-	return SDL_GL_SwapBuffers();
-}
-
-//Get mouse position in passed variables to get mouse position, dependent on window size
-void RF_GetMousePosition( float& x, float& y );
 
 #endif //RF_RENDER_H
 #endif //RF_RENDER

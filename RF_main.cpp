@@ -23,75 +23,77 @@
 //Includes for main
 #include "RF_main.h"
 
-//Objects, definitions, etc.
-SDL_Event event;
-float fpsTimer = 0;
-
-//Main function definitions
-bool RF_Initialize()
+namespace rf
 {
-	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
-	{
-		RF_Log( SDL_GetError() );
-		return false;
-	}
-	return true;
-}
+	//Objects, definitions, etc.
+	SDL_Event event;
+	float fpsTimer = 0;
 
-bool RF_Log( const std::string text, const std::string file /* = "Log.txt" */ )
-{
-	std::ofstream logFile;
-
-	logFile.open( file, std::ios::out | std::ios::app );
-	
-	if ( !logFile.is_open() )
+	//Main function definitions
+	bool initialize()
 	{
-		std::cout << "Can't open " << file << "!\n";
-		return false;
+		if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+		{
+			log( SDL_GetError() );
+			return false;
+		}
+		return true;
 	}
 
-	//Get DateTime
-	time_t rawtime;
-	time ( &rawtime );
-	char time[100];
-	ctime_s( time, 100, &rawtime );
-
-	//Log
-	logFile << time << text << "\n\n";
-
-	logFile.close();
-
-	return true;
-}
-
-bool RF_ClearLog(const std::string file /* = "Log.txt" */)
-{
-	std::ofstream logFile;
-
-	logFile.open( file );
-
-	if( !logFile.is_open() )
+	bool log( const std::string text, const std::string file /* = "Log.txt" */ )
 	{
-		std::cout << "Can't open " << file << "!\n";
-		return false;
+		std::ofstream logFile;
+
+		logFile.open( file, std::ios::out | std::ios::app );
+
+		if ( !logFile.is_open() )
+		{
+			std::cout << "Can't open " << file << "!\n";
+			return false;
+		}
+
+		//Get DateTime
+		time_t rawtime;
+		time ( &rawtime );
+		char time[100];
+		ctime_s( time, 100, &rawtime );
+
+		//Log
+		logFile << time << text << "\n\n";
+
+		logFile.close();
+
+		return true;
 	}
 
-	logFile.close();
-
-	return true;
-}
-
-void RF_BeginLoop()
-{
-	fpsTimer = (float)SDL_GetTicks();
-}
-
-void RF_HandleFps()
-{
-	if (((float)SDL_GetTicks() - fpsTimer) < 1000.f/60.f)
+	bool clearLog(const std::string file /* = "Log.txt" */)
 	{
-		SDL_Delay((int)((1000.f/60.f) - ((float)SDL_GetTicks() - fpsTimer)));
+		std::ofstream logFile;
+
+		logFile.open( file );
+
+		if( !logFile.is_open() )
+		{
+			std::cout << "Can't open " << file << "!\n";
+			return false;
+		}
+
+		logFile.close();
+
+		return true;
+	}
+
+	void beginLoop()
+	{
+		fpsTimer = (float)SDL_GetTicks();
+	}
+
+	void handleFps()
+	{
+		if (((float)SDL_GetTicks() - fpsTimer) < 1000.f/60.f)
+		{
+			SDL_Delay((int)((1000.f/60.f) - ((float)SDL_GetTicks() - fpsTimer)));
+		}
 	}
 }
-
 #endif //RF_MAIN

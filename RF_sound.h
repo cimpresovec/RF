@@ -38,32 +38,35 @@
 //TODO
 #endif
 
-//Definitions
-#define RF_SoundEngine irrklang::ISoundEngine
-#define RF_SoundSource irrklang::ISoundSource
-
-//Inline function to create an irrklang engine
-inline irrklang::ISoundEngine* RF_CreateSoundEngine()
+namespace rf
 {
-	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	return engine != NULL? engine : NULL;
-}
+	//Definitions
+	typedef irrklang::ISoundEngine SoundEngine;
+	typedef irrklang::ISoundSource SoundSource;
 
-//Inline functions that takes the sound engine and sound path and loads it preloaded
-inline irrklang::ISoundSource* RF_LoadSound( irrklang::ISoundEngine* soundEngine, const std::string filePath )
-{
-	irrklang::ISoundSource* src = soundEngine->addSoundSourceFromFile( filePath.c_str(), irrklang::ESM_AUTO_DETECT, true );
-	return src != NULL? src : NULL;
-}
-
-//Inline function that removes loaded sounds, takes sound engine pointer
-inline void RF_DeleteSound( irrklang::ISoundEngine* soundEngine, irrklang::ISoundSource* source )
-{
-	if ( source != NULL )
+	//Inline function to create an irrklang engine
+	inline irrklang::ISoundEngine* createSoundEngine()
 	{
-		soundEngine->removeSoundSource( source );
+		irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
+		return engine != NULL? engine : NULL;
 	}
-	source = NULL;
+
+	//Inline functions that takes the sound engine and sound path and loads it preloaded
+	inline irrklang::ISoundSource* loadSound( irrklang::ISoundEngine* soundEngine, const std::string filePath )
+	{
+		irrklang::ISoundSource* src = soundEngine->addSoundSourceFromFile( filePath.c_str(), irrklang::ESM_AUTO_DETECT, true );
+		return src != NULL? src : NULL;
+	}
+
+	//Inline function that removes loaded sounds, takes sound engine pointer
+	inline void deleteSound( irrklang::ISoundEngine* soundEngine, irrklang::ISoundSource* source )
+	{
+		if ( source != NULL )
+		{
+			soundEngine->removeSoundSource( source );
+		}
+		source = NULL;
+	}
 }
 
 #endif
