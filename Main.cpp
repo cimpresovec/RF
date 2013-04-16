@@ -1,4 +1,5 @@
 #include "RF.h"
+using namespace rf;
 
 bool checkCollision(float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2)
 {
@@ -43,7 +44,7 @@ struct Ball
 	}
 
 	void render(){
-		RF_DrawRectangle(x, y, w, h, x, RF_Color(0, 1, 0));
+		drawRectangle(x, y, w, h, x, Color(0, 1, 0));
 	}
 };
 
@@ -62,9 +63,9 @@ public:
 
 	void events()
 	{
-		if (RF_EventType == SDL_KEYDOWN)
+		if (eventType == SDL_KEYDOWN)
 		{
-			switch(RF_EventKey)
+			switch(eventKey)
 			{
 			case SDLK_LEFT: left = true; break;
 			case SDLK_RIGHT: right = true; break;
@@ -74,9 +75,9 @@ public:
 			}
 		}
 
-		else if (RF_EventType == SDL_KEYUP)
+		else if (eventType == SDL_KEYUP)
 		{
-			switch(RF_EventKey)
+			switch(eventKey)
 			{
 			case SDLK_LEFT: left = false; break;
 			case SDLK_RIGHT: right = false; break;
@@ -109,7 +110,7 @@ public:
 	}
 
 	void render(){
-		RF_DrawRectangle(x, y, w, h, 0.f, RF_Color(1, 0, 0));
+		drawRectangle(x, y, w, h, 0.f, Color(1, 0, 0));
 	}
 };
 class Player2
@@ -127,9 +128,9 @@ public:
 
 	void events()
 	{
-		if (RF_EventType == SDL_KEYDOWN)
+		if (eventType == SDL_KEYDOWN)
 		{
-			switch(RF_EventKey)
+			switch(eventKey)
 			{
 			case SDLK_LEFT: left = true; break;
 			case SDLK_RIGHT: right = true; break;
@@ -139,9 +140,9 @@ public:
 			}
 		}
 
-		else if (RF_EventType == SDL_KEYUP)
+		else if (eventType == SDL_KEYUP)
 		{
-			switch(RF_EventKey)
+			switch(eventKey)
 			{
 			case SDLK_LEFT: left = false; break;
 			case SDLK_RIGHT: right = false; break;
@@ -174,33 +175,33 @@ public:
 	}
 
 	void render(){
-		RF_DrawRectangle(x, y, w, h, 0.f, RF_Color(1, 0, 0));
+		drawRectangle(x, y, w, h, 0.f, Color(1, 0, 0));
 	}
 };
 int main( int argc, char* args[] )
 {
-	if (!RF_Initialize())
+	if (!initialize())
 	{
 		return 1;
 	}
 
-	if (!RF_CreateWindow("RF", 800, 600, false)) return false;
+	if (!createWindow("RF", 800, 600, false)) return false;
 
-	RF_SoundEngine* soundEngine = RF_CreateSoundEngine();
-	RF_SoundSource* music = RF_LoadSound(soundEngine, "music.mp3");
+	SoundEngine* soundEngine = createSoundEngine();
+	SoundSource* music = loadSound(soundEngine, "music.mp3");
 	soundEngine->play2D(music);
 
-	RF_SoundSource* effect = RF_LoadSound( soundEngine, "effecft.mp3" );
+	SoundSource* effect = loadSound( soundEngine, "effecft.mp3" );
 	soundEngine->play2D( effect );
-	RF_DeleteSound( soundEngine, effect );
+	deleteSound( soundEngine, effect );
 
 	bool play = true;
 
-	RF_LoadTexture("logo.png");
+	loadTexture("logo.png");
 
 	//Font
 	//RF_Font font = RF_LoadFont("cour.ttf");
-	FTGLTextureFont* font = new FTGLTextureFont("cour.ttf");
+	Font font = loadFont("cour.ttf");
 	
 	if (font->Error()	)
 	{
@@ -218,12 +219,12 @@ int main( int argc, char* args[] )
 
 	while (play)
 	{
-		RF_BeginLoop();
+		beginLoop();
 
 		//Events
-		if(RF_CheckEvent())
+		if(checkEvent())
 		{
-			if (RF_EventType == SDL_KEYDOWN && RF_EventKey == SDLK_ESCAPE)
+			if (eventType == SDL_KEYDOWN && eventKey == SDLK_ESCAPE)
 			{
 				play = false;
 			}
@@ -238,18 +239,18 @@ int main( int argc, char* args[] )
 		ball.logic();
 
 		//Render
-		RF_ClearWindow();
+		clearWindow();
 
 		player.render();
 		player2.render();
 		ball.render();
 		//Fonti TODO 
 
-		RF_DrawText( font, "Test test test test", 0, 0 );
+		drawText( font, "Test test test test", 0, 0 );
 
-		RF_SwapBuffer();
+		swapBuffer();
 
-		RF_HandleFps();
+		handleFps();
 	}
 
 	return 0;
